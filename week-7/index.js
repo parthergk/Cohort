@@ -77,7 +77,7 @@ app.get("/tasks", async (req, res) => {
 
  async function main() {
     try {
-        await mongoose.connect("mongodb+srv://gaurav_pg:gauravkumar@cluster0.b7b7nvq.mongodb.net/todo");
+        await mongoose.connect("mongo_uri");
           console.log("data base connected");
           app.listen(3000, () => {
             console.log(`Server is runnging on http://localhost:3000`);
