@@ -1,62 +1,53 @@
 const express = require("express");
 const app = express();
-const jsonwebtoke = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = "Iloveswati";
 
 app.use(express.json());
 
-const JWT_SCR = "iloveswati";
-
-const user = [];
+const db = [];
 
 app.post("/sign-up", (req, res) => {
   const { username, password } = req.body;
-  user.push({ name: username, password: password });
-  console.log(user);
-  res.send({ message: "You have signed up" });
+  db.push({ username, password });
+  res.json({ message: "you signup successfuly" });
 });
 
 app.post("/sign-in", (req, res) => {
   const { username, password } = req.body;
-  const finduser = user.find(user => user.name === username && user.password === password);
+
+  const finduser = db.find(
+    (user) => user.username === username && user.password === password
+  );
 
   if (finduser) {
-    const token = jsonwebtoke.sign(
-      {
-        name: username,
-      },JWT_SCR);
-
-    console.log("json token", token);
-    res.json({ token: token });
-  } else {
-    res.status(403).json({ message: "Invalid username or password" });
+    const token = jwt.sign({ username }, JWT_SECRET);
+    res.json({ message: "You are logined successuly", token: token });
   }
 });
 
-app.use((req, res, next)=>{
-    const token = req.headers.token;
-    if (token) {
-        next();
-    }else{
-        res.json({message:"You are not login"})
+app.use((req, res, next) => {
+  const token = req.headers.token;
+
+  jwt.verify(token, JWT_SECRET, (err, decode) => {
+    if (err) {
+      res.json({ message: "you are not verify" });
+    } else {
+      req.user = decode;
+      next();
     }
-    
+  });
 });
 
-app.get("/me", (req, res) => { 
-    console.log("Request for me");
-    
-    const token = req.headers.token;
-    const username = jsonwebtoke.verify(token, JWT_SCR);
-    
-    const findUser = user.find((user) => user.name === username.name);
-    
-    if (findUser) {
-        res.json({ username: findUser.name, password: findUser.password });
-    } else {
-        res.json({ message: "token is not valid" });
-    }
+app.get("/me", (req, res) => {
+  const { username } = req.user;
+
+  const finduser = db.find((user) => user.username === username);
+
+  res.json({ message: "hy ", finduser });
 });
 
 app.listen(3000, () => {
-  console.log("server is runing on the 3000 port");
+  console.log("server is runing on port 3000");
 });
