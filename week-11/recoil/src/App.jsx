@@ -1,42 +1,81 @@
-import { useCounter } from "../context/CounterProvider";
+// App.js
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import "./App.css";
+import {
+  counterRecoil,
+  decSelector,
+  incSelector,
+} from "./recoil/counterRecoil";
 
-function App() {
-  
+const App = () => {
+    console.log("App");
+    
   return (
-    <div className=" conteiner">
+    <div className="container">
       <div className="btn">
-        <Incress/>
-        <Decress/>
+        <Increase />
+        <Decrease />
       </div>
-      <Counter/>
+      <Counter />
+    </div>
+  );
+};
+
+function Increase() {
+    console.log("Increase btn");
+  const setCount = useSetRecoilState(counterRecoil);
+  return (
+    <button
+      onClick={() =>
+        setCount((prev) => ({
+          ...prev,
+          inc: prev.inc + 1,
+        }))
+      }
+    >
+      Increase
+    </button>
+  );
+}
+
+function Decrease() {
+    console.log("Decrease btn");
+    
+  const setCount = useSetRecoilState(counterRecoil);
+  return (
+    <button
+      onClick={() =>
+        setCount((prev) => ({
+          ...prev,
+          dec: prev.dec - 1,
+        }))
+      }
+    >
+      Decrease
+    </button>
+  );
+}
+
+function Counter() {
+    console.log("Counter");
+    return (
+        <div>
+      <IncCounter />
+      <DecCounter />
     </div>
   );
 }
 
-function Counter(){
-  const context = useCounter();
-  return(
-    <div>{context.count}</div>
-  )
+function IncCounter() {
+    console.log("Increase");
+    const incCount = useRecoilValue(incSelector);
+    return <div>Increment Count: {incCount}</div>;
 }
 
-function Incress(){
-  const context = useCounter();
-  return (
-    <button onClick={() => context.setCount(context.count + 1)}>
-          Incress
-        </button>
-  )
-}
-
-function Decress(){
-  const context = useCounter();
-  return (
-    <button onClick={() => context.setCount(context.count - 1)}>
-          Decress
-        </button>
-  )
+function DecCounter() {
+    console.log("Decrease");
+  const decCount = useRecoilValue(decSelector);
+  return <div>Decrement Count: {decCount}</div>;
 }
 
 export default App;
