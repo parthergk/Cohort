@@ -16,7 +16,6 @@ wss.on("connection", (socket)=>{
 
         //@ts-ignore
         const JsonMsg = JSON.parse(msg);
-
         if (JsonMsg.type === "join") {
             allSocket.push({
                 socket,
@@ -36,6 +35,10 @@ wss.on("connection", (socket)=>{
             })
         }
         
+    });
+
+    socket.on("close", (code)=>{
+        console.log(`Client disconnected with code: ${code}`);
     })
 
 })
