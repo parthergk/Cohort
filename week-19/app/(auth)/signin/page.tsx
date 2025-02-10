@@ -10,7 +10,7 @@ const SignIn = () => {
     <input type="text" placeholder="Enter your email" onChange={(e)=>setEmail(e.target.value)}/>
     <input type="text" placeholder="Enter your password" onChange={(e)=>setPassword(e.target.value)}/>
     <button onClick={async()=>{
-      const reaponse = await axios.post('http://localhost:3000/api/auth/signin', {
+      const reaponse = await axios.post('"secret"api/auth/signin', {
         email,
         password
     })
