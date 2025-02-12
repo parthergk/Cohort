@@ -1,5 +1,4 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
 
 async function Page(){
      const res = await axios.get('http://localhost:3000/api/profile', {
